@@ -59,30 +59,12 @@ export default function App() {
   );
 }
 
-function Navbar() {
-  return (
-    <nav className="nav-bar">
-      <Logo />
-      <Search />
-      <NumResults />
-    </nav>
-  );
-}
-
 function Logo() {
   return (
     <div className="logo">
       <span role="img">🍿</span>
       <h1>usePopcorn</h1>
     </div>
-  );
-}
-
-function NumResults() {
-  return (
-    <p className="num-results">
-      Found <strong>x</strong> results
-    </p>
   );
 }
 
@@ -99,7 +81,26 @@ function Search() {
   );
 }
 
+function NumResult() {
+  return (
+    <p className="num-results">
+      Found <strong>X</strong> results
+    </p>
+  );
+}
+
+function Navbar() {
+  return (
+    <nav className="nav-bar">
+      <Logo />
+      <Search />
+      <NumResult />
+    </nav>
+  );
+}
+
 function ListBox() {
+  const [movies, setMovies] = useState(tempMovieData);
   const [isOpen1, setIsOpen1] = useState(true);
   return (
     <div className="box">
@@ -109,7 +110,22 @@ function ListBox() {
       >
         {isOpen1 ? "–" : "+"}
       </button>
-      {isOpen1 && <MovieList />}
+      {isOpen1 && (
+        <ul className="list">
+          {movies?.map((movie) => (
+            <li key={movie.imdbID}>
+              <img src={movie.Poster} alt={`${movie.Title} poster`} />
+              <h3>{movie.Title}</h3>
+              <div>
+                <p>
+                  <span>🗓</span>
+                  <span>{movie.Year}</span>
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -153,35 +169,32 @@ function WatchedBox() {
               </p>
             </div>
           </div>
+
+          <ul className="list">
+            {watched.map((movie) => (
+              <li key={movie.imdbID}>
+                <img src={movie.Poster} alt={`${movie.Title} poster`} />
+                <h3>{movie.Title}</h3>
+                <div>
+                  <p>
+                    <span>⭐️</span>
+                    <span>{movie.imdbRating}</span>
+                  </p>
+                  <p>
+                    <span>🌟</span>
+                    <span>{movie.userRating}</span>
+                  </p>
+                  <p>
+                    <span>⏳</span>
+                    <span>{movie.runtime} min</span>
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </>
       )}
     </div>
-  );
-}
-
-function MovieList() {
-  const [movies, setMovies] = useState(tempMovieData);
-  return (
-    <ul className="list">
-      {movies?.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID} />
-      ))}
-    </ul>
-  );
-}
-
-function Movie({ movie }) {
-  return (
-    <li>
-      <img src={movie.Poster} alt={`${movie.Title} poster`} />
-      <h3>{movie.Title}</h3>
-      <div>
-        <p>
-          <span>🗓</span>
-          <span>{movie.Year}</span>
-        </p>
-      </div>
-    </li>
   );
 }
 
