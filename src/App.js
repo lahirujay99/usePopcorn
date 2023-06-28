@@ -60,6 +60,15 @@ export default function App() {
         <NumResult movies={movies} />
       </Navbar>
       <Main>
+        <Box>
+          <MovieList movies={movies} />
+        </Box>
+        <Box>
+          <WatchedSummary watched={watched} />
+          <WatchedMovieList watched={watched} />
+        </Box>
+
+        {/*  we can use this way also. this is passing element as a prop
         <Box element={<MovieList movies={movies} />} />
         <Box
           element={
@@ -68,14 +77,7 @@ export default function App() {
               <WatchedMovieList watched={watched} />
             </>
           }
-        />
-        {/* <Box>
-          <MovieList movies={movies} />
-        </Box>
-        <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMovieList watched={watched} />
-        </Box> */}
+        /> */}
       </Main>
     </>
   );
@@ -124,14 +126,14 @@ function Main({ children }) {
   return <main className="main">{children}</main>;
 }
 
-function Box({ element }) {
+function Box({ children }) {
   const [isOpen, setIsOpen] = useState(true);
   return (
     <div className="box">
       <button className="btn-toggle" onClick={() => setIsOpen((open) => !open)}>
         {isOpen ? "–" : "+"}
       </button>
-      {isOpen && element}
+      {isOpen && children}
     </div>
   );
 }
