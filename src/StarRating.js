@@ -16,6 +16,7 @@ StarRating.propTypes = {
   size: PropTypes.number,
   message: PropTypes.array,
   color: PropTypes.string,
+  onSet: PropTypes.func,
 };
 
 // maxStar = 5 mean set default value
