@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import PropTypes from "prop-types";
 const containerStyle = {
   display: "flex",
   alignItems: "center",
@@ -8,6 +8,14 @@ const containerStyle = {
 
 const starContainerStyle = {
   display: "flex",
+};
+
+StarRating.propTypes = {
+  maxStar: PropTypes.number,
+  defaultRating: PropTypes.number,
+  size: PropTypes.number,
+  message: PropTypes.array,
+  color: PropTypes.string,
 };
 
 // maxStar = 5 mean set default value
