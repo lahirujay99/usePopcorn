@@ -57,10 +57,22 @@ export default function App() {
   const [watched, setWatched] = useState([]);
 
   //useEffect doesn't return anything
+  // useEffect(function () {
+  //   fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
+  //     .then((res) => res.json())
+  //     .then((data) => setMovies(data.Search));
+  // }, []);
+
   useEffect(function () {
-    fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
-      .then((res) => res.json())
-      .then((data) => setMovies(data.Search));
+    async function fetchMovies() {
+      const res = await fetch(
+        `http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`
+      );
+      const data = await res.json();
+      setMovies(data.Search);
+      console.log(data.Search);
+    }
+    fetchMovies(); // function should call, if not it won't working
   }, []);
 
   return (
