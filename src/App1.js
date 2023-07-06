@@ -58,31 +58,8 @@ export default function App() {
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const tempQuery = "interstellar";
+  const [selectedId, setSelectedId] = useState(null);
 
-  //useEffect doesn't return anything
-  // useEffect(function () {
-  //   fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
-  //     .then((res) => res.json())
-  //     .then((data) => setMovies(data.Search));
-  // }, []);
-
-  /*  useEffect(function () {
-    console.log("during initial render");
-  }, []);
-
-  useEffect(function () {
-    console.log("during every render");
-  });
-
-  useEffect(
-    function () {
-      console.log("during prop change");
-    },
-    [query]
-  );
-  console.log("during render");
-*/
   useEffect(
     function () {
       async function fetchMovies() {
@@ -98,7 +75,6 @@ export default function App() {
           // if movie not found
           const data = await res.json();
           if (data.Response === "False") throw new Error("Movie not found");
-
           setMovies(data.Search);
         } catch (err) {
           console.log(err.message);
@@ -115,8 +91,12 @@ export default function App() {
 
       fetchMovies(); // function should call, if not it won't working
     },
-    [query]
+    [query] //use query in dependancy array to synchronize with movie data
   );
+
+  function handleSelectedId(id) {
+    setSelectedId(id);
+  }
 
   return (
     <>
@@ -127,14 +107,22 @@ export default function App() {
       <Main>
         <Box>
           {isLoading && <Loader />}
-          {!isLoading && !error && <MovieList movies={movies} />}
+          {!isLoading && !error && (
+            <MovieList movies={movies} setSelectedId={handleSelectedId} />
+          )}
           {error && <ErrorMessage message={error} />}
 
           {/* {isLoading ? <Loader /> : <MovieList movies={movies} />} */}
         </Box>
         <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMovieList watched={watched} />
+          {selectedId ? (
+            <MovieDetail selectedId={selectedId} />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMovieList watched={watched} />
+            </>
+          )}
         </Box>
 
         {/*  we can use this way also. this is passing element as a prop
@@ -219,19 +207,19 @@ function Box({ children }) {
   );
 }
 
-function MovieList({ movies }) {
+function MovieList({ movies, setSelectedId }) {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID} />
+        <Movie movie={movie} key={movie.imdbID} setSelectedId={setSelectedId} />
       ))}
     </ul>
   );
 }
 
-function Movie({ movie }) {
+function Movie({ movie, setSelectedId }) {
   return (
-    <li>
+    <li onClick={() => setSelectedId(movie.imdbID)}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>
@@ -242,6 +230,10 @@ function Movie({ movie }) {
       </div>
     </li>
   );
+}
+
+function MovieDetail({ selectedId }) {
+  return <div className="details">{selectedId}</div>;
 }
 
 function WatchedSummary({ watched }) {
@@ -306,6 +298,30 @@ function WatchedMovie({ movie }) {
     </li>
   );
 }
+
+//useEffect doesn't return anything
+// useEffect(function () {
+//   fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
+//     .then((res) => res.json())
+//     .then((data) => setMovies(data.Search));
+// }, []);
+
+/*  useEffect(function () {
+    console.log("during initial render");
+  }, []);
+
+  useEffect(function () {
+    console.log("during every render");
+  });
+
+  useEffect(
+    function () {
+      console.log("during prop change");
+    },
+    [query]
+  );
+  console.log("during render");
+*/
 
 /*function WatchedBox() {  |this is use for show watchedmovies previously
   const [watched, setWatched] = useState(tempWatchedData);
