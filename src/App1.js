@@ -58,31 +58,8 @@ export default function App() {
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const tempQuery = "interstellar";
+  const [selectedId, setSelectedId] = useState("tt0816692");
 
-  //useEffect doesn't return anything
-  // useEffect(function () {
-  //   fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
-  //     .then((res) => res.json())
-  //     .then((data) => setMovies(data.Search));
-  // }, []);
-
-  /*  useEffect(function () {
-    console.log("during initial render");
-  }, []);
-
-  useEffect(function () {
-    console.log("during every render");
-  });
-
-  useEffect(
-    function () {
-      console.log("during prop change");
-    },
-    [query]
-  );
-  console.log("during render");
-*/
   useEffect(
     function () {
       async function fetchMovies() {
@@ -98,7 +75,6 @@ export default function App() {
           // if movie not found
           const data = await res.json();
           if (data.Response === "False") throw new Error("Movie not found");
-
           setMovies(data.Search);
         } catch (err) {
           console.log(err.message);
@@ -115,7 +91,7 @@ export default function App() {
 
       fetchMovies(); // function should call, if not it won't working
     },
-    [query]
+    [query] //use query in dependancy array to synchronize with movie data
   );
 
   return (
@@ -244,6 +220,10 @@ function Movie({ movie }) {
   );
 }
 
+function SelectedMovie({ selectedId }) {
+  return <div className="details">{selectedId}</div>;
+}
+
 function WatchedSummary({ watched }) {
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
   const avgUserRating = average(watched.map((movie) => movie.userRating));
@@ -306,6 +286,30 @@ function WatchedMovie({ movie }) {
     </li>
   );
 }
+
+//useEffect doesn't return anything
+// useEffect(function () {
+//   fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
+//     .then((res) => res.json())
+//     .then((data) => setMovies(data.Search));
+// }, []);
+
+/*  useEffect(function () {
+    console.log("during initial render");
+  }, []);
+
+  useEffect(function () {
+    console.log("during every render");
+  });
+
+  useEffect(
+    function () {
+      console.log("during prop change");
+    },
+    [query]
+  );
+  console.log("during render");
+*/
 
 /*function WatchedBox() {  |this is use for show watchedmovies previously
   const [watched, setWatched] = useState(tempWatchedData);
