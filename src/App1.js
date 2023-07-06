@@ -55,6 +55,7 @@ const KEY = "5b1acce8";
 const query = "interstellar";
 
 export default function App() {
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -82,7 +83,6 @@ export default function App() {
         if (data.Response === "False") throw new Error("Movie not found");
 
         setMovies(data.Search);
-        console.log(data.Search);
       } catch (err) {
         console.log(err.message);
         setError(err.message);
@@ -96,7 +96,7 @@ export default function App() {
   return (
     <>
       <Navbar>
-        <Search />
+        <Search query={query} setQuery={setQuery} />
         <NumResult movies={movies} />
       </Navbar>
       <Main>
@@ -158,8 +158,7 @@ function Logo() {
   );
 }
 
-function Search() {
-  const [query, setQuery] = useState("");
+function Search({ query, setQuery }) {
   return (
     <input
       className="search"
