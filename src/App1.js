@@ -242,7 +242,7 @@ function Movie({ movie, setSelectedId }) {
 
 function MovieDetail({ selectedId, closeMovie }) {
   const [movie, setMovie] = useState({}); // use empty object bcs API return an object.
-  const [rating, setRating] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     Title: title,
@@ -260,11 +260,13 @@ function MovieDetail({ selectedId, closeMovie }) {
   useEffect(
     function () {
       async function getMovieDetails() {
+        setIsLoading(true);
         const res = await fetch(
           `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
         );
         const data = await res.json(); // mathak karala await dapan.
         setMovie(data);
+        setIsLoading(false);
       }
       getMovieDetails();
     },
@@ -273,33 +275,39 @@ function MovieDetail({ selectedId, closeMovie }) {
 
   return (
     <div className="details">
-      <header>
-        <button className="btn-back" onClick={closeMovie}>
-          &larr;
-        </button>
-        <img src={poster} alt={`poster of ${title} movie`} />
-        <div className="details-overview">
-          <h2>{title}</h2>
-          <p>
-            {released} &bull; {runtime}
-          </p>
-          <p>{genre}</p>
-          <p>
-            <span>⭐</span>
-            {imdbRating} IMDB Rating
-          </p>
-        </div>
-      </header>
-      <section>
-        <div className="rating">
-          <StarRating size={24} maxStar={10} onSet={setRating} />
-        </div>
-        <p>
-          <em>{plot}</em>
-        </p>
-        <p>Starring {actors}</p>
-        <p>Directed By {director}</p>
-      </section>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <header>
+            <button className="btn-back" onClick={closeMovie}>
+              &larr;
+            </button>
+            <img src={poster} alt={`poster of ${title} movie`} />
+            <div className="details-overview">
+              <h2>{title}</h2>
+              <p>
+                {released} &bull; {runtime}
+              </p>
+              <p>{genre}</p>
+              <p>
+                <span>⭐</span>
+                {imdbRating} IMDB Rating
+              </p>
+            </div>
+          </header>
+          <section>
+            <div className="rating">
+              <StarRating size={24} maxStar={10} />
+            </div>
+            <p>
+              <em>{plot}</em>
+            </p>
+            <p>Starring {actors}</p>
+            <p>Directed By {director}</p>
+          </section>
+        </>
+      )}
     </div>
   );
 }
