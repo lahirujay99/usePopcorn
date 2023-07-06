@@ -240,6 +240,17 @@ function Movie({ movie, setSelectedId }) {
 }
 
 function MovieDetail({ selectedId, closeMovie }) {
+  useEffect(function () {
+    async function getMovieDetails() {
+      const res = await fetch(
+        `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
+      );
+      const data = await res.json(); // mathak karala await dapan.
+      console.log(data);
+    }
+    getMovieDetails();
+  }, []);
+
   return (
     <div className="details">
       <button className="btn-back" onClick={closeMovie}>
