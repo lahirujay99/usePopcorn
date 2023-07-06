@@ -52,14 +52,13 @@ const average = (arr) =>
 
 const KEY = "5b1acce8";
 
-const query = "interstellar";
-
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const tempQuery = "interstellar";
 
   //useEffect doesn't return anything
   // useEffect(function () {
@@ -68,30 +67,50 @@ export default function App() {
   //     .then((data) => setMovies(data.Search));
   // }, []);
 
-  useEffect(function () {
-    async function fetchMovies() {
-      try {
-        setIsLoading(true);
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
-        );
-        // if there network error or somekind failure
-        if (!res.ok)
-          throw new Error("Something went wrong with fetching movies..");
-        // if movie not found
-        const data = await res.json();
-        if (data.Response === "False") throw new Error("Movie not found");
-
-        setMovies(data.Search);
-      } catch (err) {
-        console.log(err.message);
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchMovies(); // function should call, if not it won't working
+  /*  useEffect(function () {
+    console.log("during initial render");
   }, []);
+
+  useEffect(function () {
+    console.log("during every render");
+  });
+
+  useEffect(
+    function () {
+      console.log("during prop change");
+    },
+    [query]
+  );
+  console.log("during render");
+*/
+  useEffect(
+    function () {
+      async function fetchMovies() {
+        try {
+          setIsLoading(true);
+          setError("");
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          );
+          // if there network error or somekind failure
+          if (!res.ok)
+            throw new Error("Something went wrong with fetching movies..");
+          // if movie not found
+          const data = await res.json();
+          if (data.Response === "False") throw new Error("Movie not found");
+
+          setMovies(data.Search);
+        } catch (err) {
+          console.log(err.message);
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+      fetchMovies(); // function should call, if not it won't working
+    },
+    [query]
+  );
 
   return (
     <>
