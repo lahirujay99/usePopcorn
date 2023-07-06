@@ -40,7 +40,7 @@ export default function StarRating({
 
   function hanldeRating(rating) {
     setRating(rating);
-    //onSet(rating);
+    onSet(rating);
   }
   return (
     <div style={containerStyle}>
