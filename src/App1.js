@@ -240,13 +240,28 @@ function Movie({ movie, setSelectedId }) {
 }
 
 function MovieDetail({ selectedId, closeMovie }) {
+  const [movie, setMovie] = useState({}); // use empty object bcs API return an object.
+
+  const {
+    Title: title,
+    Year: year,
+    Poster: poster,
+    Runtime: runtime,
+    imdbRating,
+    Plot: plot,
+    Released: released,
+    Actors: actors,
+    Director: director,
+    Genre: genre,
+  } = movie;
+
   useEffect(function () {
     async function getMovieDetails() {
       const res = await fetch(
         `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
       );
       const data = await res.json(); // mathak karala await dapan.
-      console.log(data);
+      setMovie(data);
     }
     getMovieDetails();
   }, []);
