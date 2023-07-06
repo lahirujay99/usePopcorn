@@ -98,6 +98,10 @@ export default function App() {
     setSelectedId(id);
   }
 
+  function handleClosedMovie() {
+    setSelectedId(null);
+  }
+
   return (
     <>
       <Navbar>
@@ -116,7 +120,10 @@ export default function App() {
         </Box>
         <Box>
           {selectedId ? (
-            <MovieDetail selectedId={selectedId} />
+            <MovieDetail
+              selectedId={selectedId}
+              closeMovie={handleClosedMovie}
+            />
           ) : (
             <>
               <WatchedSummary watched={watched} />
@@ -232,8 +239,15 @@ function Movie({ movie, setSelectedId }) {
   );
 }
 
-function MovieDetail({ selectedId }) {
-  return <div className="details">{selectedId}</div>;
+function MovieDetail({ selectedId, closeMovie }) {
+  return (
+    <div className="details">
+      <button className="btn-back" onClick={closeMovie}>
+        &larr;
+      </button>
+      {selectedId}
+    </div>
+  );
 }
 
 function WatchedSummary({ watched }) {
