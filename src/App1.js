@@ -268,10 +268,30 @@ function MovieDetail({ selectedId, closeMovie }) {
 
   return (
     <div className="details">
-      <button className="btn-back" onClick={closeMovie}>
-        &larr;
-      </button>
-      {selectedId}
+      <header>
+        <button className="btn-back" onClick={closeMovie}>
+          &larr;
+        </button>
+        <img src={poster} alt={`poster of ${title} movie`} />
+        <div className="details-overview">
+          <h2>{title}</h2>
+          <p>
+            {released} &bull; {runtime}
+          </p>
+          <p>{genre}</p>
+          <p>
+            <span>⭐</span>
+            {imdbRating} IMDB Rating
+          </p>
+        </div>
+      </header>
+      <section>
+        <p>
+          <em>{plot}</em>
+        </p>
+        <p>Starring {actors}</p>
+        <p>Directed By {director}</p>
+      </section>
     </div>
   );
 }
