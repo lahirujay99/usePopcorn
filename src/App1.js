@@ -58,7 +58,7 @@ export default function App() {
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [selectedId, setSelectedId] = useState("tt0816692");
+  const [selectedId, setSelectedId] = useState(null);
 
   useEffect(
     function () {
@@ -94,6 +94,10 @@ export default function App() {
     [query] //use query in dependancy array to synchronize with movie data
   );
 
+  function handleSelectedId(id) {
+    setSelectedId(id);
+  }
+
   return (
     <>
       <Navbar>
@@ -103,14 +107,22 @@ export default function App() {
       <Main>
         <Box>
           {isLoading && <Loader />}
-          {!isLoading && !error && <MovieList movies={movies} />}
+          {!isLoading && !error && (
+            <MovieList movies={movies} setSelectedId={handleSelectedId} />
+          )}
           {error && <ErrorMessage message={error} />}
 
           {/* {isLoading ? <Loader /> : <MovieList movies={movies} />} */}
         </Box>
         <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMovieList watched={watched} />
+          {selectedId ? (
+            <MovieDetail selectedId={selectedId} />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMovieList watched={watched} />
+            </>
+          )}
         </Box>
 
         {/*  we can use this way also. this is passing element as a prop
@@ -195,19 +207,19 @@ function Box({ children }) {
   );
 }
 
-function MovieList({ movies }) {
+function MovieList({ movies, setSelectedId }) {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID} />
+        <Movie movie={movie} key={movie.imdbID} setSelectedId={setSelectedId} />
       ))}
     </ul>
   );
 }
 
-function Movie({ movie }) {
+function Movie({ movie, setSelectedId }) {
   return (
-    <li>
+    <li onClick={() => setSelectedId(movie.imdbID)}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>
@@ -220,7 +232,7 @@ function Movie({ movie }) {
   );
 }
 
-function SelectedMovie({ selectedId }) {
+function MovieDetail({ selectedId }) {
   return <div className="details">{selectedId}</div>;
 }
 
