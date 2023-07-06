@@ -242,6 +242,7 @@ function Movie({ movie, setSelectedId }) {
 
 function MovieDetail({ selectedId, closeMovie }) {
   const [movie, setMovie] = useState({}); // use empty object bcs API return an object.
+  const [rating, setRating] = useState(0);
 
   const {
     Title: title,
@@ -256,16 +257,19 @@ function MovieDetail({ selectedId, closeMovie }) {
     Genre: genre,
   } = movie;
 
-  useEffect(function () {
-    async function getMovieDetails() {
-      const res = await fetch(
-        `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
-      );
-      const data = await res.json(); // mathak karala await dapan.
-      setMovie(data);
-    }
-    getMovieDetails();
-  }, []);
+  useEffect(
+    function () {
+      async function getMovieDetails() {
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
+        );
+        const data = await res.json(); // mathak karala await dapan.
+        setMovie(data);
+      }
+      getMovieDetails();
+    },
+    [selectedId]
+  );
 
   return (
     <div className="details">
@@ -288,7 +292,7 @@ function MovieDetail({ selectedId, closeMovie }) {
       </header>
       <section>
         <div className="rating">
-          <StarRating size={24} maxStar={10} />
+          <StarRating size={24} maxStar={10} onSet={setRating} />
         </div>
         <p>
           <em>{plot}</em>
