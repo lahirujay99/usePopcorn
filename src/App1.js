@@ -249,6 +249,7 @@ function Movie({ movie, setSelectedId }) {
 function MovieDetail({ selectedId, closeMovie, onAddWatched }) {
   const [movie, setMovie] = useState({}); // use empty object bcs API return an object.
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState("");
 
   const {
     Title: title,
@@ -271,6 +272,7 @@ function MovieDetail({ selectedId, closeMovie, onAddWatched }) {
       poster,
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)),
+      userRating,
     };
 
     onAddWatched(newMovie);
@@ -318,10 +320,12 @@ function MovieDetail({ selectedId, closeMovie, onAddWatched }) {
           </header>
           <section>
             <div className="rating">
-              <StarRating size={24} maxStar={10} />
-              <button className="btn-add" onClick={() => handleAdd()}>
-                + Add to list
-              </button>
+              <StarRating size={24} maxStar={10} onSet={setUserRating} />
+              {userRating > 0 && (
+                <button className="btn-add" onClick={() => handleAdd()}>
+                  + Add to list
+                </button>
+              )}
             </div>
             <p>
               <em>{plot}</em>
