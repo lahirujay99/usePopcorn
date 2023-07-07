@@ -63,12 +63,14 @@ export default function App() {
 
   useEffect(
     function () {
+      const controller = new AbortController();
       async function fetchMovies() {
         try {
           setIsLoading(true);
           setError("");
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            { signal: controller.signal }
           );
           // if there network error or somekind failure
           if (!res.ok)
@@ -79,7 +81,9 @@ export default function App() {
           setMovies(data.Search);
         } catch (err) {
           console.log(err.message);
-          setError(err.message);
+          if (err.name !== "AbortError") {
+            setError(err.message);
+          }
         } finally {
           setIsLoading(false);
         }
@@ -91,6 +95,10 @@ export default function App() {
       }
 
       fetchMovies(); // function should call, if not it won't working
+
+      return function () {
+        controller.abort();
+      };
     },
     [query] //use query in dependancy array to synchronize with movie data
   );
@@ -316,6 +324,7 @@ function MovieDetail({ selectedId, closeMovie, onAddWatched, watched }) {
       return function () {
         // this is cleanup function
         document.title = "usePopcorn";
+        // console.log(`clan up movie ${title}`);
       };
     },
     [title]
