@@ -103,6 +103,10 @@ export default function App() {
     setSelectedId(null);
   }
 
+  function handleWatched(movie) {
+    setWatched((watched) => [...watched, movie]);
+  }
+
   return (
     <>
       <Navbar>
