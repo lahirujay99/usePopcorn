@@ -108,6 +108,10 @@ export default function App() {
     setWatched((watched) => [...watched, movie]);
   }
 
+  function handleDeleteWatched(id) {
+    setWatched((watched) => watched.filter((a) => a.imdbID !== id));
+  }
+
   return (
     <>
       <Navbar>
