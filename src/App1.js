@@ -194,12 +194,6 @@ function Logo() {
 }
 
 function Search({ query, setQuery }) {
-  useEffect(
-    function () {
-      if (!query) document.title = "usePopcorn";
-    },
-    [query]
-  );
   return (
     <input
       className="search"
@@ -318,6 +312,11 @@ function MovieDetail({ selectedId, closeMovie, onAddWatched, watched }) {
     function () {
       if (!title) return;
       document.title = `Movie | ${title}`;
+
+      return function () {
+        // this is cleanup function
+        document.title = "usePopcorn";
+      };
     },
     [title]
   );
