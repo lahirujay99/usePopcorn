@@ -70,7 +70,7 @@ export default function App() {
           setError("");
           const res = await fetch(
             `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            { signal: controller.signal }
+            { signal: controller.signal } // fetch request yanawa search karana akura gane eka hinda controller ekak danne .request ekak giyapu gaman thawa mokak hari type karoth araka abort wela aluth ekak yanwa
           );
           // if there network error or somekind failure
           if (!res.ok)
@@ -97,6 +97,7 @@ export default function App() {
       fetchMovies(); // function should call, if not it won't working
 
       return function () {
+        // mathak karala clean up karanna one effect ekak use karanawanan
         controller.abort();
       };
     },
@@ -328,6 +329,21 @@ function MovieDetail({ selectedId, closeMovie, onAddWatched, watched }) {
       };
     },
     [title]
+  );
+
+  useEffect(
+    function () {
+      document.addEventListener("keydown", function (e) {
+        if (e.code === "Escape") {
+          closeMovie();
+          console.log("closed");
+        }
+      });
+      return function () {
+        document.removeEventListener();
+      };
+    },
+    [closeMovie]
   );
 
   return (
