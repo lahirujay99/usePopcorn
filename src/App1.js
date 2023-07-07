@@ -103,7 +103,8 @@ export default function App() {
     setSelectedId(null);
   }
 
-  function handleWatched(movie) {
+  function handleAddWatched(movie) {
+    console.log(movie);
     setWatched((watched) => [...watched, movie]);
   }
 
@@ -128,6 +129,7 @@ export default function App() {
             <MovieDetail
               selectedId={selectedId}
               closeMovie={handleClosedMovie}
+              onAddWatched={handleAddWatched}
             />
           ) : (
             <>
@@ -244,7 +246,7 @@ function Movie({ movie, setSelectedId }) {
   );
 }
 
-function MovieDetail({ selectedId, closeMovie }) {
+function MovieDetail({ selectedId, closeMovie, onAddWatched }) {
   const [movie, setMovie] = useState({}); // use empty object bcs API return an object.
   const [isLoading, setIsLoading] = useState(false);
 
@@ -260,6 +262,19 @@ function MovieDetail({ selectedId, closeMovie }) {
     Director: director,
     Genre: genre,
   } = movie;
+
+  function handleAdd() {
+    const newMovie = {
+      imdbRating: selectedId,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime.split(" ").at(0)),
+    };
+
+    onAddWatched(newMovie);
+  }
 
   useEffect(
     function () {
@@ -303,6 +318,9 @@ function MovieDetail({ selectedId, closeMovie }) {
           <section>
             <div className="rating">
               <StarRating size={24} maxStar={10} />
+              <button className="btn-add" onClick={() => handleAdd()}>
+                + Add to list
+              </button>
             </div>
             <p>
               <em>{plot}</em>
