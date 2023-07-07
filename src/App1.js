@@ -130,6 +130,7 @@ export default function App() {
               selectedId={selectedId}
               closeMovie={handleClosedMovie}
               onAddWatched={handleAddWatched}
+              watched={watched}
             />
           ) : (
             <>
@@ -246,10 +247,12 @@ function Movie({ movie, setSelectedId }) {
   );
 }
 
-function MovieDetail({ selectedId, closeMovie, onAddWatched }) {
+function MovieDetail({ selectedId, closeMovie, onAddWatched, watched }) {
   const [movie, setMovie] = useState({}); // use empty object bcs API return an object.
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
+
+  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
 
   const {
     Title: title,
@@ -320,11 +323,17 @@ function MovieDetail({ selectedId, closeMovie, onAddWatched }) {
           </header>
           <section>
             <div className="rating">
-              <StarRating size={24} maxStar={10} onSet={setUserRating} />
-              {userRating > 0 && (
-                <button className="btn-add" onClick={() => handleAdd()}>
-                  + Add to list
-                </button>
+              {!isWatched ? (
+                <>
+                  <StarRating size={24} maxStar={10} onSet={setUserRating} />
+                  {userRating > 0 && (
+                    <button className="btn-add" onClick={() => handleAdd()}>
+                      + Add to list
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p>you rated this movie</p>
               )}
             </div>
             <p>
