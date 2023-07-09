@@ -206,6 +206,19 @@ function MovieDetail({ selectedId, closeMovie, onAddWatched, watched }) {
   //   if (imdbRating > 8) [isTop, setisTop] = useState(true);
   //   if (imdbRating > 8) return <p>Greatest Ever!</p>;
 
+  /*const isTop = imdbRating > 8;  this is derived state and this exactly same as figure 1.1
+  console.log(isTop);*/
+
+  //figure 1.1
+  /*const [isTop, setIsTop] = useState(imdbRating > 8);
+  console.log(isTop);
+  useEffect(
+    function () {
+      setIsTop(imdbRating > 8);
+    },
+    [imdbRating]
+  );*/
+
   function handleAdd() {
     const newMovie = {
       imdbID: selectedId,
