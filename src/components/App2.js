@@ -16,6 +16,31 @@ export default function App() {
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
+  function handleSelectedId(id) {
+    setSelectedId((selectedId) => (id === selectedId ? null : id));
+  }
+
+  function handleClosedMovie() {
+    setSelectedId(null);
+  }
+
+  function handleAddWatched(movie) {
+    console.log(movie);
+    setWatched((watched) => [...watched, movie]);
+    // localStorage.setItem("watched", JSON.stringify([...watched, movie]));
+  }
+
+  function handleDeleteWatched(id) {
+    setWatched((watched) => watched.filter((a) => a.imdbID !== id));
+  }
+
+  useEffect(
+    function () {
+      localStorage.setItem("watched", JSON.stringify(watched));
+    },
+    [watched]
+  );
+
   useEffect(
     function () {
       const controller = new AbortController();
@@ -59,25 +84,6 @@ export default function App() {
     },
     [query] //use query in dependancy array to synchronize with movie data
   );
-
-  function handleSelectedId(id) {
-    setSelectedId((selectedId) => (id === selectedId ? null : id));
-  }
-
-  function handleClosedMovie() {
-    setSelectedId(null);
-  }
-
-  function handleAddWatched(movie) {
-    console.log(movie);
-    setWatched((watched) => [...watched, movie]);
-    localStorage.setItem("watched", JSON.stringify([...watched, movie]));
-  }
-
-  function handleDeleteWatched(id) {
-    setWatched((watched) => watched.filter((a) => a.imdbID !== id));
-  }
-
   return (
     <>
       <Navbar>
