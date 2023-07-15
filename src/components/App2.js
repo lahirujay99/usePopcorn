@@ -16,6 +16,8 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
 
   //const [watched, setWatched] = useState([]);
+
+  //function react execute on initial render
   const [watched, setWatched] = useState(function () {
     const storedVal = localStorage.getItem("watched");
     return JSON.parse(storedVal);
