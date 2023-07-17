@@ -5,7 +5,7 @@ import { useLocalStorageState } from "./useLocalStorageState";
 import { useKey } from "./useKey";
 
 // this for experiment new things
-
+// in here i use custom hooks and useRef hook
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
