@@ -20,7 +20,7 @@ export default function App() {
     return JSON.parse(storedVal);
   });
 
-  const { movies, isLoading, error } = useMovies(query);
+  const { movies, isLoading, error } = useMovies(query, handleClosedMovie);
 
   function handleSelectedId(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
