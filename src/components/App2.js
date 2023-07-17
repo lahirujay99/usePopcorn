@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
+import { useMovies } from "./useMovies";
 
 // this for experiment new things
 
@@ -10,11 +11,7 @@ const KEY = "5b1acce8";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
-
   //const [watched, setWatched] = useState([]);
 
   //function react execute on initial render
@@ -22,6 +19,8 @@ export default function App() {
     const storedVal = localStorage.getItem("watched");
     return JSON.parse(storedVal);
   });
+
+  const { movies, isLoading, error } = useMovies(query);
 
   function handleSelectedId(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -48,49 +47,6 @@ export default function App() {
     [watched]
   );
 
-  useEffect(
-    function () {
-      const controller = new AbortController();
-      async function fetchMovies() {
-        try {
-          setIsLoading(true);
-          setError("");
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            { signal: controller.signal } // fetch request yanawa search karana akura gane eka hinda controller ekak danne .request ekak giyapu gaman thawa mokak hari type karoth araka abort wela aluth ekak yanwa
-          );
-          // if there network error or somekind failure
-          if (!res.ok)
-            throw new Error("Something went wrong with fetching movies..");
-          // if movie not found
-          const data = await res.json();
-          if (data.Response === "False") throw new Error("Movie not found");
-          setMovies(data.Search);
-        } catch (err) {
-          console.log(err.message);
-          if (err.name !== "AbortError") {
-            setError(err.message);
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      }
-      if (query.length < 3) {
-        setMovies([]);
-        setError("");
-        return;
-      }
-
-      handleClosedMovie();
-      fetchMovies(); // function should call, if not it won't working
-
-      return function () {
-        // mathak karala clean up karanna one effect ekak use karanawanan
-        controller.abort();
-      };
-    },
-    [query] //use query in dependancy array to synchronize with movie data
-  );
   return (
     <>
       <Navbar>
@@ -203,6 +159,15 @@ function MovieDetail({ selectedId, closeMovie, onAddWatched, watched }) {
     (movie) => movie.imdbID === selectedId
   )?.userRating;
 
+  const countRef = useRef(0);
+
+  useEffect(
+    function () {
+      if (userRating) countRef.current = countRef.current + 1;
+    },
+    [userRating]
+  );
+
   const {
     Title: title,
     Year: year,
@@ -242,6 +207,7 @@ function MovieDetail({ selectedId, closeMovie, onAddWatched, watched }) {
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)),
       userRating,
+      ratingCount: countRef.current,
     };
 
     onAddWatched(newMovie);
